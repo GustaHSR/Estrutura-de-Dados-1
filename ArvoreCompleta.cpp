@@ -143,17 +143,214 @@ public:
 			cout << ")";
 		}
     }
+
+    void pre_print() {
+        recursive_pre_print(root);
+    }
+    void recursive_pre_print(No* tree) {
+        if (tree != NULL)  {
+            cout << tree->value;
+            cout << "(";
+            recursive_pre_print(tree->left);
+            recursive_pre_print(tree->right);
+            cout << ")";
+        }
+    }
+
+    void symetric_print() {
+        recursive_symetric_print(root);
+    }
+    void recursive_symetric_print(No* tree) {
+        if (tree != NULL)  {
+            cout << "(";
+            recursive_symetric_print(tree->left);
+            cout << tree->value;
+            recursive_symetric_print(tree->right);
+            cout << ")";
+        }
+    }
+
+    void pos_print() {
+        recursive_pos_print(root);
+    }
+    void recursive_pos_print(No* tree) {
+         if (tree != NULL)  {
+            cout << "(";
+            recursive_symetric_print(tree->left);
+            recursive_symetric_print(tree->right);
+            cout << ")";
+            cout << tree->value;
+        }
+    }
+
+    void horizontal_print() {
+        bool mapa[255] = {};
+        recursive_horizontal_print(root,mapa);
+    }
+    void recursive_horizontal_print(No* tree, bool *mapa, int nivel = 0, bool esq = true) {
+        if (tree != NULL) {
+            mapa[nivel] = true; //Este nivel deve ser escrito
+            if (nivel)
+                mapa[nivel-1] = (esq)? false: true;
+            recursive_horizontal_print(tree->left, mapa, nivel+1, true);
+            cout << left;
+            for (int i = 0; i < nivel; i++) {
+                cout.width(4);
+                if (i < nivel-1) {
+                    cout << (mapa[i]?"|":"");
+                }else {
+                    cout.fill('-');
+                    cout << "+";
+                    cout.fill(' ');
+                }
+            }
+            cout << "(" << tree->value << ")" << endl;
+
+            if (nivel)
+                mapa[nivel-1] = (!esq) ? false : true;
+            recursive_horizontal_print(tree->right,mapa,nivel+1,false);
+        }
+    }
+
+    int node_count() {
+        return recursive_node_count(root);
+    }
+    int recursive_node_count(No* tree) {
+        if (tree == NULL) {
+            return 0;
+        }
+        return recursive_node_count(tree->left)+1+recursive_node_count(tree->right);
+    }
+
+    No* clear () {
+        if (root == NULL) {
+            cout << "Empty Tree" << endl;
+            return NULL;
+        }
+        else {
+            root = NULL;
+            return recursive_clear(root);
+        }
+    }
+    No* recursive_clear(No* tree) {
+        if (tree == NULL) {
+            return NULL;
+        }
+        tree->left = recursive_clear(tree->left);
+        tree->right = recursive_clear(tree->right);
+        delete tree;
+        return NULL;
+
+    }
+    int getHeight() {
+        return recursive_getHeight(root);
+    }
+    int recursive_getHeight (No* tree) {
+        if (tree == NULL) {
+            return -1;
+        }
+        int esq, dir;
+        esq = recursive_getHeight(tree->left);
+        dir = recursive_getHeight(tree->right);
+
+        if (esq > dir) {
+            return 1 + esq;
+        }
+        else {
+            return 1 + dir;
+        }
+    }
+
+
 };
 
 int main() {
     Tree arvore;
-    arvore.insert(22);
-    arvore.insert(15);
-    arvore.print();
-    cout << endl << endl;
-    arvore.insert(7);
-    arvore.insert(2);
-    arvore.insert(14);
-    arvore.print();
-    cout << endl << endl;
+    int menu = -1;
+    int v;
+
+    do {
+
+        system("clear");
+        cout << "0: EXIT" << endl;
+        cout << "1: INSERT" << endl;
+        cout << "2: PRINT" << endl;
+        cout << "3: EXCLUIR" << endl;
+        cout << "4: CLEAR" << endl;
+        cout << "5: COUNT NODES" << endl;
+        cout << "6: HEIGHT" << endl << endl;
+
+        arvore.horizontal_print();
+        cout << endl << ">> ";
+        cin >> menu;
+
+        switch(menu) {
+            case 0:
+                cout << "Ending Program...";
+                sleep(2);
+                break;
+            case 1:
+                cout << "Type the element you wanna insert in the tree: ";
+                cin >> v;
+                arvore.insert(v);
+                break;
+            case 2:
+                system("clear");
+                cout << "Which type of impression?" << endl;
+                cout << "1: Prefixed" << endl;
+                cout << "2: Symetric" << endl;
+                cout << "3: Posfixed" << endl;
+                cout << "4: Horizontal" << endl;
+                cin >> menu;
+
+                if(!arvore.exist()) {
+                    cout << "Empty Tree" << endl;
+                    cout << endl;
+                }else {
+                    cout << "Tree elements: " << endl;
+                    switch(menu) {
+                        case 1:
+                            arvore.pre_print();
+                            
+                            break;
+                        case 2:
+                            arvore.symetric_print();
+                           
+                            break;
+                        case 3:
+                            arvore.pos_print();
+                            
+                            break;
+                        case 4:
+                            arvore.horizontal_print();
+                            
+                            break;
+                        default:
+                            arvore.horizontal_print();
+                            break;
+                    }
+                    cout << endl;
+                }
+                menu = 2;
+                sleep(2);
+                break;
+            case 3:
+                cout << "MAINTAINCE..." << endl;
+                sleep(2);
+                break;
+            case 4:
+                arvore.clear();
+                cout << "Tree successfully cleared" << endl;
+                sleep(2);
+                break;
+            case 5:
+                cout << "The tree has " << arvore.node_count() << endl;
+                sleep(2);
+                break;
+            case 6:
+                cout << "The height of the tree is " << arvore.getHeight() << "." << endl;
+                sleep(2);
+                break;
+        }
+    }while(menu!= 0);
 }
