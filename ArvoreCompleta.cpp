@@ -50,8 +50,8 @@ public:
             else 
                 Simple_Right_Rotation(node);
         }
-        if (node->left)  VerifyBalance(node->left);
-        if (node->right) VerifyBalance(node->right);
+        if (node->left != NULL)  VerifyBalance(node->left);
+        if (node->right != NULL) VerifyBalance(node->right);
     }
 
     void Simple_Right_Rotation (No* node) {
@@ -96,7 +96,7 @@ public:
         if (new_node->value > Tree->value) {
             if (Tree->right == nullptr) {
                 Tree->right = new_node;
-                VerifyBalance(Tree);
+                VerifyBalance(root);
                 return;
             } else {
                 this->_insert_recursivo(Tree->right, new_node);
@@ -104,7 +104,7 @@ public:
         } else {
             if (Tree->left == nullptr) {
                 Tree->left = new_node;
-                VerifyBalance(Tree);
+                VerifyBalance(root);
                 return;
             } else {
                 this->_insert_recursivo(Tree->left, new_node);
@@ -287,7 +287,6 @@ int main() {
         switch(menu) {
             case 0:
                 cout << "Ending Program...";
-                sleep(2);
                 break;
             case 1:
                 cout << "Type the element you wanna insert in the tree: ";
@@ -335,7 +334,7 @@ int main() {
                 sleep(2);
                 break;
             case 3:
-                cout << "MAINTAINCE..." << endl;
+                cout << "MAINTENANCE..." << endl;
                 sleep(2);
                 break;
             case 4:
