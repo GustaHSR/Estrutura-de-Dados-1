@@ -356,62 +356,51 @@ public:
         return false;
     }
 
-    bool deleteValue(int v)
+    No* getSuccessor(No* tree) {
+        No* current = tree;
+        while(current != NULL and current->left != NULL)
+            current = current->left;
+        return current;
+    }
+
+    No* deleteValue(int v)
     {
         return recursive_deleteValue(root, v);
     }
-    bool recursive_deleteValue(No *tree, int v)
+    No *recursive_deleteValue(No *tree, int v)
     {
         if (empty(tree))
-            return false;
+        {
+            cout << "Value not found!" << endl;
+            return tree;
+        }
         if (v < tree->value)
         {
-            recursive_deleteValue(tree->left, v);
+            tree->left = recursive_deleteValue(tree->left, v);
         }
         else if (v > tree->value)
         {
-            recursive_deleteValue(tree->right, v);
+            tree->right = recursive_deleteValue(tree->right, v);
         }
         else
         {
-            No *aux = tree;
-            if (tree->right == NULL and tree->left == NULL)
-            {
-                tree = NULL;
-                delete aux;
+            if(tree->left == NULL) {
+                No* aux = tree->right;
+                delete tree;
+                return aux;
             }
-            else if (tree->left == NULL or tree->right == NULL)
-            {
-                if (tree->left != NULL)
-                {
-                    tree = tree->left;
-                }
-                else
-                {
-                    tree = tree->right;
-                }
-                delete aux;
+            else if (tree->right == NULL) {
+                No* aux = tree->left;
+                delete tree;
+                return aux;
             }
-            else
-            {
-                if (tree->left->height() > tree->right->height())
-                {
-                    aux = tree->left;
-                    tree = tree->right;
-                    tree->left = aux;
-                    delete aux;
-                }
-                else
-                {
-                    aux = tree->right;
-                    tree = tree->left;
-                    tree->right = aux;
-                    delete aux;
-                }
+            else {
+               No* successor = getSuccessor(tree->right);
+               tree->value = successor->value;
+               tree->right = recursive_deleteValue(tree->right,successor->value);
             }
-            return true;
         }
-        return false;
+        return tree;
     }
 };
 #endif
