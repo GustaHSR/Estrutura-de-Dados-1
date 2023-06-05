@@ -80,20 +80,18 @@ int main()
             break;
         case 3:
             system("clear");
-            cout << "Type the value to delete: ";
-            int v;
-            cin >> v;
-            if (arvore.deleteValue(v))
-            {
-                cout << "\nSuccess" << endl;
-                arvore.update();
+            if(arvore.exist()) {
+                cout << "Type the value to delete: ";
+                int v;
+                cin >> v;
+                arvore.root = arvore.deleteValue(v);
                 arvore.VerifyBalance(arvore.root);
-                arvore.update();
             }
             else
             {
-                cout << "Leaf not found!" << endl;
+                cout << "Empty Tree" << endl;
             }
+            sleep(2);
             break;
         case 4:
             arvore.clear();
